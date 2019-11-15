@@ -1,0 +1,14 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+    <% include partials/navigation.ejs%>
+        <% teacher.forEach(function (item) { %>
+            <h1><%=item.teacherFirstName%> <%=item.teacherLastName%> </h1>
+            <p><%=item.teacherRoom%>  </p>
+            <p><%=item.teacherAcronym%>  </p>
+        <% });%>
+    </body>
+</html>

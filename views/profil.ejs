@@ -1,0 +1,14 @@
+<html>
+<head>
+
+</head>
+
+<body>
+<% include partials/navigation.ejs%>
+    <h1>Hi, <%= username%></h1>
+    <% courses.forEach(function (item) { %>
+        <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> </h2>
+        <p><%=item.utilName%></p>
+    <% });%>
+    </body>
+</html>

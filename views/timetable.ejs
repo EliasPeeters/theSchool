@@ -1,0 +1,91 @@
+<html>
+    <body>
+
+        <% include partials/navigation.ejs%>
+        <table>
+            <td>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Montag</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% monday.forEach(function(item) {%>
+                    <tr onmousedown="openPage(<%=item.coursesID%>)">
+                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
+                    </tr>
+                    <%});%>
+                    </tbody>
+                </table>
+            </td>
+
+            <td>
+                <table>
+                    <thead>
+                    <trs
+                        <td>Dienstag</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% tuesday.forEach(function(item) {%>
+                        <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
+                            <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
+                        </tr>
+                    <%});%>
+                    </tbody>
+                </table>
+            </td>
+
+            <td>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Mittwoch</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% wednesday.forEach(function(item) {%>
+                    <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
+                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
+                    </tr>
+                    <%});%>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Donnerstag</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% thursday.forEach(function(item) {%>
+                    <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
+                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
+                    </tr>
+                    <%});%>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Freitag</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% friday.forEach(function(item) {%>
+                    <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
+                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
+                    </tr>
+                    <%});%>
+                    </tbody>
+                </table>
+            </td>
+        </table>
+    </body>
+
+</html>

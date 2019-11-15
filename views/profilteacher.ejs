@@ -1,0 +1,18 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+    <% include partials/navigation.ejs%>
+    <h1>Hi, <%= username%></h1>
+    <% courses.forEach(function (item, index) { %>
+        <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h2>
+            <% utils[index].forEach(function(item){ %>
+                <h4><%=item.utilName%></h4>
+                <p><%=item.utilDescription%></p>
+            <% }); %>
+        <h2></h2>
+    <% });%>
+    </body>
+</html>

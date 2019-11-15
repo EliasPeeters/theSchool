@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="0b5f869e-a7d4-4529-94e9-45095ad24b7e" name="theSchoolDigitalOcean" url="http://165.22.89.117">
+        <fileTransfer host="165.22.89.117" port="22" rootFolder="/root/TheSchool" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
