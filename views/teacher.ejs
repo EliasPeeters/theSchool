@@ -3,8 +3,9 @@
 
     </head>
 
+
     <body>
-    <% include partials/navigation.ejs%>
+    <% include partials/sidebar.ejs%>
         <% teacher.forEach(function (item) { %>
             <h1><%=item.teacherFirstName%> <%=item.teacherLastName%> </h1>
             <p><%=item.teacherRoom%>  </p>

@@ -1,0 +1,28 @@
+#Sidebar {
+    width: 140px;
+    height: 100%;
+    background-color: white;
+    position: fixed;
+}
+
+#Sidebar img {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#Sidebar a {
+    text-decoration: none;
+    color: black;
+    background-color: white;
+}
+
+#Sidebar li {
+    list-style: none;
+    margin-top: 10px;
+}
+
+#Sidebar ul {
+    margin-left: -25px;
+}

@@ -1,91 +1,62 @@
 <html>
-    <body>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
 
-        <% include partials/navigation.ejs%>
-        <table>
-            <td>
-                <table>
-                    <thead>
-                    <tr>
-                        <td>Montag</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% monday.forEach(function(item) {%>
-                    <tr onmousedown="openPage(<%=item.coursesID%>)">
-                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
-                    </tr>
-                    <%});%>
-                    </tbody>
-                </table>
-            </td>
+    <link type="text/css" rel="stylesheet" href="assets/timetable.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
 
-            <td>
-                <table>
-                    <thead>
-                    <trs
-                        <td>Dienstag</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% tuesday.forEach(function(item) {%>
-                        <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
-                            <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
-                        </tr>
-                    <%});%>
-                    </tbody>
-                </table>
-            </td>
+<body>
 
-            <td>
-                <table>
-                    <thead>
-                    <tr>
-                        <td>Mittwoch</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% wednesday.forEach(function(item) {%>
-                    <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
-                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
-                    </tr>
-                    <%});%>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <thead>
-                    <tr>
-                        <td>Donnerstag</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% thursday.forEach(function(item) {%>
-                    <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
-                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
-                    </tr>
-                    <%});%>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <thead>
-                    <tr>
-                        <td>Freitag</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% friday.forEach(function(item) {%>
-                    <tr onmousedown="openPage('/onecourse?id=' + <%=item.coursesID%>)">
-                        <td style="color: <%=item.subjectColor%>;"><%=item.subjectName%></td>
-                    </tr>
-                    <%});%>
-                    </tbody>
-                </table>
-            </td>
-        </table>
-    </body>
+<% include partials/sidebar.ejs%>
 
+<h1 id="heading">Stundenplan</h1>
+<div id="content">
+    <div class="column" style="width: 16.6%">
+        <div class="cell"></div>
+        <div class="cell">1 <br> <p class="time">7:45-8:30</p> </div>
+        <div class="cell">2 <br> <p class="time">8:30-9:15</p> </div>
+        <div class="cell">3 <br> <p class="time">9:35-10:20</p> </div>
+        <div class="cell">4 <br> <p class="time">10:20-11:05</p> </div>
+        <div class="cell">5 <br> <p class="time">11:25-12:10</p> </div>
+        <div class="cell">6 <br> <p class="time">12:10-13:00</p> </div>
+        <div class="cell">7 <br> <p class="time">13:05-13:50</p> </div>
+        <div class="cell">8 <br> <p class="time">13:50-14:35</p> </div>
+        <div class="cell">9 <br> <p class="time">14:35-15:20</p> </div>
+        <div class="cell">10 <br> <p class="time">15:30-16:15</p> </div>
+        <div class="cell">11 <br> <p class="time">16:15-17:00</p> </div>
+    </div>
+
+    <div class="column">
+        <div class="cell">Montag</div>
+        <% monday.forEach(function(item) {%>
+        <div onmousedown="openPage(<%=item.coursesID%>)" class="cell" style="background-color: <%=item.subjectColor%>;"><%=item.subjectName%></div>
+        <%});%>
+    </div>
+    <div class="column">
+        <div class="cell">Dienstag</div>
+        <% tuesday.forEach(function(item) {%>
+        <div onmousedown="openPage(<%=item.coursesID%>)" class="cell" style="background-color: <%=item.subjectColor%>;"><%=item.subjectName%></div>
+        <%});%>
+    </div>
+    <div class="column">
+        <div class="cell">Mittwoch</div>
+        <% wednesday.forEach(function(item) {%>
+        <div onmousedown="openPage(<%=item.coursesID%>)" class="cell" style="background-color: <%=item.subjectColor%>;"><%=item.subjectName%></div>
+        <%});%>
+    </div>
+    <div class="column">
+        <div class="cell">Donnerstag</div>
+        <% thursday.forEach(function(item) {%>
+        <div onmousedown="openPage(<%=item.coursesID%>)" class="cell" style="background-color: <%=item.subjectColor%>;"><%=item.subjectName%></div>
+        <%});%>
+    </div>
+    <div class="column">
+        <div class="cell">Freitag</div>
+        <% friday.forEach(function(item) {%>
+        <div onmousedown="openPage(<%=item.coursesID%>)" class="cell" style="background-color: <%=item.subjectColor%>;"><%=item.subjectName%></div>
+        <%});%>
+    </div>
+</div>
+</body>
 </html>

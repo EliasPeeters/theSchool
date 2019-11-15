@@ -15,6 +15,7 @@ var loggedInUsers = {};
 
 app.set('view engine', 'ejs');
 app.use(cookieparser());
+app.use('/assets', express.static('assets'));
 
 const connection = mysql.createConnection({
 	host: '165.22.89.117',
