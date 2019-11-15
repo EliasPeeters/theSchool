@@ -1,15 +1,25 @@
 <html>
-    <head>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/teacher.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
 
-    </head>
+<body>
 
+<% include partials/sidebar.ejs%>
 
-    <body>
-    <% include partials/sidebar.ejs%>
-        <% teacher.forEach(function (item) { %>
-            <h1><%=item.teacherFirstName%> <%=item.teacherLastName%> </h1>
-            <p><%=item.teacherRoom%>  </p>
-            <p><%=item.teacherAcronym%>  </p>
-        <% });%>
-    </body>
+<h1 id="heading">Lehrer</h1>
+
+<div id="contentteacher">
+    <% teacher.forEach(function (item) { %>
+    <div class="teacherCard">
+        <img src="assets/teacher<%=item.teacherAcronym%>.png">
+            <p class="teacherName"><%=item.teacherFirstName%> <%=item.teacherLastName%> </p>
+            <p class="teacherRoom">Raum: <%=item.teacherRoom%> </p>
+            <p class="teacherShort">Kürzel: <%=item.teacherAcronym%> </p>
+    </div>
+    <% });%>
+</div>
+</body>
 </html>
