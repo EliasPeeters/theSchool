@@ -73,7 +73,7 @@ app.post('/login', urlencodedparser, async function (req, res) {
 		if (result[0].userTeacher == 1) {
 			res.redirect('/profilteacher');
 		} else {
-			res.redirect('/profil');
+			res.redirect('/timetable');
 		}
 
 	} else {
@@ -214,6 +214,27 @@ function timetableOptimizer(inputDay) {
 
 	return outputDay;
 }
+
+app.get('/lists', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const courses = await connection.asyncquery('SELECT * FROM course LEFT JOIN subject on course.subjectID = subject.subjectID LEFT JOIN user_courses on user_courses.courseID = course.courseID WHERE userID = ' + user[0].userID);
+
+
+	var utils = [];
+
+	for (let i = 0; i < courses.length; i++) {
+		let items = await connection.asyncquery('SELECT * FROM utilities left join course on course.courseID = utilities.courseID LEFT JOIN subject on subject.subjectID = course.subjectID WHERE course.courseID=' + courses[i].courseID);
+		utils.push(items);
+	}
+
+	console.log(utils);
+	res.render('lists.ejs', {username: user[0].userName, courses: courses, utils: utils});
+});
+
 
 app.get('/timetable',urlencodedparser, async function (req, res) {
 	if (!logined(req, res)) {

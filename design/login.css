@@ -1,0 +1,44 @@
+#loginbox {
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+#loginbox img {
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 10px;
+}
+
+#loginbox h2 {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#loginbox input {
+    width: 80%;
+    margin-left: 10%;
+    border: none;
+    border-bottom: solid 1px lightgray;
+    height: 30px;
+}
+
+#loginbox input:focus {
+    outline: none;
+}
+
+#loginbox p {
+    margin-left: 10%;
+    color: gray;
+    font-size: 12px;
+}
+
+#loginbutton {
+    width: 80%;
+    margin-left: 10%; 
+    background-color: rgb(42, 138, 245);
+    color: white;
+    margin-top: 20px;
+}

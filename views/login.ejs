@@ -1,16 +1,21 @@
 <html>
-    <head>
-        <title>Login</title>
-    </head>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/login.css">
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
 
-    <body>
-        <h1>Login</h1>
-        <p><%= error%></p>
-        <form action="/login" method="post">
-            <p>Usename</p><input type="text" name="username"><br>
-            <p>Password</p> <input type="password" name="password"><br>
-            <input type="submit" value="Login">
-        </form>
-    </body>
+<body>
 
+<div id="loginbox">
+    <img src="assets/ohglogo.svg">
+    <h2>Login</h2>
+    <p></p>
+    <form action="/login" method="post">
+        <input type="text" name="username" autocomplete="off"><p>Usename</p><br>
+        <input type="password" name="password" autocomplete="off"><p>Password</p> <br>
+        <input id="loginbutton" type="submit" value="Login">
+    </form>
+</div>
+</body>
 </html>
