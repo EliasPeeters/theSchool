@@ -1,24 +1,32 @@
 <html>
 <head>
-
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/list.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<% include partials/navigation.ejs%>
-<h1>Hi, <%= username%></h1>
-<% courses.forEach(function (item, index) { %>
-    <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h2>
-    <% utils[index].forEach(function(item){ %>
-        <h4><%=item.utilName%></h4>
-        <p><%=item.utilDescription%></p>
-    <% }); %>
+<% include partials/sidebarteacher.ejs%>
 
-    <form action="/liststeacher?id=<%= item.courseID%>" method="post" name="test">
-        <input type="text" name="name">
-        <input type="text" name="description">
-        <input type="submit">
-    </form>
+<h1 id="heading">Listen</h1>
+<div id="contentlists">
 
-<% });%>
+    <% courses.forEach(function (item, index) { %>
+        <div class="subjectCard">
+            <h1 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h1>
+            <% utils[index].forEach(function(item){ %>
+            <p class="utilTitle"><%=item.utilName%></p>
+            <p class="utilDescription"><%=item.utilDescription%></p>
+            <% }); %>
+
+            <form action="/liststeacher?id=<%= item.courseID%>" method="post" name="new" class="newItem">
+                <p class="description" >Titel</p><input type="text" name="name"> <br>
+                <p class="description" >Beschreibung</p><input type="text" name="description"> <br>
+                <input class="submitButton" type="submit">
+            </form>
+        </div>
+    <% });%>
+
+</div>
 </body>
 </html>

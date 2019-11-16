@@ -185,7 +185,6 @@ app.get('/liststeacher', urlencodedparser, async function (req, res) {
 		utils.push(items);
 	}
 
-	console.log(courses)
 	res.render('teacherlists.ejs', {username: user[0].userName, courses: courses, utils: utils});
 });
 
@@ -194,7 +193,6 @@ app.post('/liststeacher', urlencodedparser, async function(req, res) {
 	const query = 'INSERT INTO utilities (utilName, utilDescription, courseID) VALUES (\'' + req.body.name + '\', \'' + req.body.description + '\',' + req.query.id+ ')';
 
 	await connection.asyncquery(query);
-	console.log(query);
 	res.redirect('/liststeacher');
 });
 
