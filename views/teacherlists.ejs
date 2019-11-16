@@ -9,10 +9,16 @@
 <% courses.forEach(function (item, index) { %>
     <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h2>
     <% utils[index].forEach(function(item){ %>
-    <h4><%=item.utilName%></h4>
-    <p><%=item.utilDescription%></p>
+        <h4><%=item.utilName%></h4>
+        <p><%=item.utilDescription%></p>
     <% }); %>
-    <h2></h2>
+
+    <form action="/liststeacher?id=<%= item.courseID%>" method="post" name="test">
+        <input type="text" name="name">
+        <input type="text" name="description">
+        <input type="submit">
+    </form>
+
 <% });%>
 </body>
 </html>

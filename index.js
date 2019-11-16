@@ -164,6 +164,40 @@ app.get('/profil', async function(req, res){
 	res.render('profil.ejs', {courses: courses, username: user[0].userName});
 });
 
+app.get('/liststeacher', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	if (user[0].userTeacher !== 1) {
+		res.redirect('/lists');
+	}
+	const courses = await connection.asyncquery('SELECT * FROM course\n' +
+		'    LEFT JOIN subject on subject.subjectID = course.subjectID\n' +
+		'WHERE teacherID = ' + user[0].teacherID);
+
+
+	var utils = [];
+
+	for (let i = 0; i < courses.length; i++) {
+		let items = await connection.asyncquery('SELECT * FROM utilities left join course on course.courseID = utilities.courseID WHERE course.courseID=' + courses[i].courseID);
+		utils.push(items);
+	}
+
+	console.log(courses)
+	res.render('teacherlists.ejs', {username: user[0].userName, courses: courses, utils: utils});
+});
+
+app.post('/liststeacher', urlencodedparser, async function(req, res) {
+
+	const query = 'INSERT INTO utilities (utilName, utilDescription, courseID) VALUES (\'' + req.body.name + '\', \'' + req.body.description + '\',' + req.query.id+ ')';
+
+	await connection.asyncquery(query);
+	console.log(query);
+	res.redirect('/liststeacher');
+});
+
 app.get('/profilteacher', async function (req, res) {
 	if (!logined(req, res)) {
 		return
