@@ -18,10 +18,10 @@ app.use(cookieparser());
 app.use('/assets', express.static('assets'));
 
 const connection = mysql.createConnection({
-	host: '165.22.89.117',
+	host: '192.168.150.60',
 	user: 'theSchool',
-	password: 'password1234',
-	database: 'theSchoolDB'
+	password: 'KDEAmUToWJik2MDhQLtoPihF',
+	database: 'theSchool'
 });
 
 connection.connect((err) => {
