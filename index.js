@@ -61,7 +61,7 @@ app.get('/login', async function (req, res) {
 });
 
 app.post('/login', urlencodedparser, async function (req, res) {
-	var user = 'SELECT * FROM theSchoolDB.user WHERE username=\'' + req.body.username + '\'';
+	var user = 'SELECT * FROM theSchool.user WHERE username=\'' + req.body.username + '\'';
 
 
 	result = await connection.asyncquery(user);
@@ -87,7 +87,7 @@ app.get('/register', async function (req, res) {
 
 app.post('/register', urlencodedparser, async function (req, res) {
 	var hash = bcrypt.hashSync(req.body.password, saltRounds);
-	const query = 'INSERT INTO `theSchoolDB`.`user` (`userName`, `userPassword`) VALUES (\'' + req.body.username + '\', \'' + hash + '\');';
+	const query = 'INSERT INTO `theSchool`.`user` (`userName`, `userPassword`) VALUES (\'' + req.body.username + '\', \'' + hash + '\');';
 	await connection.asyncquery(query);
 	res.redirect('/login');
 });
@@ -120,11 +120,11 @@ app.get('/onecourse', urlencodedparser, async function (req, res) {
 	if (req.query.id === 'timetable') {
 		res.redirect('timetable')
 	}
-	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 	let courseID = req.query.id;
 
 	//check if user is in course
-	let queryUserIsInCourse = 'SELECT * FROM theSchoolDB.user_courses WHERE userID = ' + user[0].userID + ' AND courseID = ' + courseID + ';'
+	let queryUserIsInCourse = 'SELECT * FROM theSchool.user_courses WHERE userID = ' + user[0].userID + ' AND courseID = ' + courseID + ';'
 	let resultUserIsInCourse = await connection.asyncquery(queryUserIsInCourse);
 
 	if (resultUserIsInCourse.length === 0) {
@@ -132,14 +132,14 @@ app.get('/onecourse', urlencodedparser, async function (req, res) {
 		return;
 	}
 
-	let queryCourse = 'SELECT * FROM theSchoolDB.course\n' +
-		'    LEFT JOIN theSchoolDB.teacher on teacher.teacherID =course.teacherID\n' +
-		'    LEFT JOIN theSchoolDB.subject on subject.subjectID = course.subjectID\n' +
+	let queryCourse = 'SELECT * FROM theSchool.course\n' +
+		'    LEFT JOIN theSchool.teacher on teacher.teacherID =course.teacherID\n' +
+		'    LEFT JOIN theSchool.subject on subject.subjectID = course.subjectID\n' +
 		'    WHERE courseID = ' + req.query.id;
 
 	let resultCourse = await connection.asyncquery(queryCourse);
 
-	let queryUtilities ='SELECT * FROM theSchoolDB.utilities WHERE courseID = ' + req.query.id;
+	let queryUtilities ='SELECT * FROM theSchool.utilities WHERE courseID = ' + req.query.id;
 	let resultUtilities = await connection.asyncquery(queryUtilities);
 
 	res.render('onecourse.ejs', {course: resultCourse, utilites: resultUtilities});
@@ -150,7 +150,7 @@ app.get('/profil', async function(req, res){
 	if (!logined(req, res)) {
 		return
 	}
-	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 
 	if (user[0].userTeacher == 1) {
 		res.redirect('/profilteacher')
@@ -168,7 +168,7 @@ app.get('/liststeacher', urlencodedparser, async function (req, res) {
 	if (!logined(req, res)) {
 		return
 	}
-	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 
 	if (user[0].userTeacher !== 1) {
 		res.redirect('/lists');
@@ -192,6 +192,7 @@ app.post('/liststeacher', urlencodedparser, async function(req, res) {
 
 	const query = 'INSERT INTO utilities (utilName, utilDescription, courseID) VALUES (\'' + req.body.name + '\', \'' + req.body.description + '\',' + req.query.id+ ')';
 
+	
 	await connection.asyncquery(query);
 	res.redirect('/liststeacher');
 });
@@ -200,7 +201,7 @@ app.get('/profilteacher', async function (req, res) {
 	if (!logined(req, res)) {
 		return
 	}
-	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 
 	if (user[0].userTeacher !== 1) {
 		res.redirect('/profil')
@@ -251,7 +252,7 @@ app.get('/lists', urlencodedparser, async function (req, res) {
 	if (!logined(req, res)) {
 		return
 	}
-	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 
 	const courses = await connection.asyncquery('SELECT * FROM course LEFT JOIN subject on course.subjectID = subject.subjectID LEFT JOIN user_courses on user_courses.courseID = course.courseID WHERE userID = ' + user[0].userID);
 
@@ -272,32 +273,32 @@ app.get('/timetable',urlencodedparser, async function (req, res) {
 	if (!logined(req, res)) {
 		return
 	}
-	const user = await connection.asyncquery('SELECT * FROM theSchoolDB.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 
-	const mondayDB = await connection.asyncquery('SELECT * FROM theSchoolDB.course\n' +
-		'    LEFT JOIN theSchoolDB.subject on course.subjectID = subject.subjectID\n' +
-		'    LEFT JOIN theSchoolDB.user_courses on user_courses.courseID = course.courseID\n' +
-		'    LEFT JOIN theSchoolDB.courses_times ON courses_times.coursesID = course.courseID\n' +
+	const mondayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
+		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
+		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
+		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
 		'WHERE ctWeekday = 1 AND userID = ' + user[0].userID);
-	const tuesdayDB = await connection.asyncquery('SELECT * FROM theSchoolDB.course\n' +
-		'    LEFT JOIN theSchoolDB.subject on course.subjectID = subject.subjectID\n' +
-		'    LEFT JOIN theSchoolDB.user_courses on user_courses.courseID = course.courseID\n' +
-		'    LEFT JOIN theSchoolDB.courses_times ON courses_times.coursesID = course.courseID\n' +
+	const tuesdayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
+		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
+		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
+		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
 		'WHERE ctWeekday = 2 AND userID = ' + user[0].userID);
-	const wednesdayDB = await connection.asyncquery('SELECT * FROM theSchoolDB.course\n' +
-		'    LEFT JOIN theSchoolDB.subject on course.subjectID = subject.subjectID\n' +
-		'    LEFT JOIN theSchoolDB.user_courses on user_courses.courseID = course.courseID\n' +
-		'    LEFT JOIN theSchoolDB.courses_times ON courses_times.coursesID = course.courseID\n' +
+	const wednesdayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
+		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
+		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
+		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
 		'WHERE ctWeekday = 3 AND userID = ' + user[0].userID);
-	const thursdayDB = await connection.asyncquery('SELECT * FROM theSchoolDB.course\n' +
-		'    LEFT JOIN theSchoolDB.subject on course.subjectID = subject.subjectID\n' +
-		'    LEFT JOIN theSchoolDB.user_courses on user_courses.courseID = course.courseID\n' +
-		'    LEFT JOIN theSchoolDB.courses_times ON courses_times.coursesID = course.courseID\n' +
+	const thursdayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
+		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
+		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
+		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
 		'WHERE ctWeekday = 4 AND userID = ' + user[0].userID);
-	const fridayDB = await connection.asyncquery('SELECT * FROM theSchoolDB.course\n' +
-		'    LEFT JOIN theSchoolDB.subject on course.subjectID = subject.subjectID\n' +
-		'    LEFT JOIN theSchoolDB.user_courses on user_courses.courseID = course.courseID\n' +
-		'    LEFT JOIN theSchoolDB.courses_times ON courses_times.coursesID = course.courseID\n' +
+	const fridayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
+		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
+		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
+		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
 		'WHERE ctWeekday = 5 AND userID = ' + user[0].userID);
 
 	var monday = timetableOptimizer(mondayDB);
@@ -310,7 +311,7 @@ app.get('/timetable',urlencodedparser, async function (req, res) {
 });
 
 app.get('/teacher', async function (req, res) {
-	const teacher = await connection.asyncquery('SELECT * FROM theSchoolDB.teacher');
+	const teacher = await connection.asyncquery('SELECT * FROM theSchool.teacher');
 	res.render('teacher.ejs', {teacher: teacher});
 });
 

@@ -15,8 +15,13 @@
         <div class="subjectCard">
             <h1 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h1>
             <% utils[index].forEach(function(item){ %>
-            <p class="utilTitle"><%=item.utilName%></p>
-            <p class="utilDescription"><%=item.utilDescription%></p>
+                <div class="utilCard">
+
+                    <p class="utilTitle"><%=item.utilName%></p>
+                    <p class="utilDescription"><%=item.utilDescription%></p>
+                    <div class="utilButton" id="utilDelete" onmousedown="openPage('/login')">Löschen</div>
+                    <div class="utilButton">Übersicht</div>
+                </div>
             <% }); %>
 
             <form action="/liststeacher?id=<%= item.courseID%>" method="post" name="new" class="newItem">
