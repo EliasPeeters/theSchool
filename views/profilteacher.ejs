@@ -1,18 +1,26 @@
 <html>
 <head>
-
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/list.css">
+    <link type="text/css" rel="stylesheet" href="assets/teacherprofil.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<% include partials/navigation.ejs%>
-<h1>Hi, <%= username%></h1>
-<% courses.forEach(function (item, index) { %>
-    <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h2>
-    <% utils[index].forEach(function(item){ %>
-    <h4><%=item.utilName%></h4>
-    <p><%=item.utilDescription%></p>
-    <% }); %>
-    <h2></h2>
-<% });%>
+
+
+<% include partials/sidebarteacher.ejs%>
+<h1 id="heading">Hallo, <%= username%></h1>
+<div id="contentprofil">
+
+
+    <div id="courses">
+        <h2>Kurse</h2>
+        <% courses.forEach(function (item, index) { %>
+            <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> <%= item.courseYear%></h2>
+        <% });%>
+    </div>
+
+</div>
 </body>
 </html>
