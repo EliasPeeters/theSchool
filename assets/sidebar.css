@@ -26,3 +26,15 @@
 #Sidebar ul {
     margin-left: -25px;
 }
+
+#logout {
+    position: fixed;
+    bottom: 20px;
+    text-align: center;
+    width: 140px;
+    color: red;
+}
+
+#logout:Hover {
+    cursor: pointer;
+}
