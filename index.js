@@ -69,7 +69,6 @@ app.post('/login', urlencodedparser, async function (req, res) {
 		var uuidForUser = uuid();
 		res.cookie('sessionToken', uuidForUser);
 		loggedInUsers[uuidForUser] = result[0].userID;
-		console.log(result[0].userTeacher);
 		if (result[0].userTeacher == 1) {
 			res.redirect('/profilteacher');
 		} else {
@@ -152,7 +151,7 @@ app.get('/profil', async function(req, res){
 	}
 	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
 
-	if (user[0].userTeacher == 1) {
+	if (user[0].userTeacher === 1) {
 		res.redirect('/profilteacher')
 	}
 
@@ -179,22 +178,63 @@ app.get('/liststeacher', urlencodedparser, async function (req, res) {
 
 
 	var utils = [];
+	var progress = [];
 
 	for (let i = 0; i < courses.length; i++) {
 		let items = await connection.asyncquery('SELECT * FROM utilities left join course on course.courseID = utilities.courseID WHERE course.courseID=' + courses[i].courseID);
+		const numberOfStudents = await connection.asyncquery('SELECT utilities_user.utilitiesuserID FROM utilities_user \n' +
+			'    LEFT JOIN utilities u on utilities_user.utilID = u.utilID\n' +
+			'WHERE courseID = ' + courses[i].courseID);
+
+		const numberOfStudentsDone = await connection.asyncquery('SELECT utilities_user.utilitiesuserID FROM utilities_user \n' +
+			'    LEFT JOIN utilities u on utilities_user.utilID = u.utilID\n' +
+			'WHERE courseID = ' + courses[i].courseID + ' AND utilities_userDone = 1');
+		progress.push({string: numberOfStudentsDone.length + '/' + numberOfStudents.length});
 		utils.push(items);
 	}
-
-	res.render('teacherlists.ejs', {username: user[0].userName, courses: courses, utils: utils});
+	console.log(progress);
+	res.render('teacherlists.ejs', {username: user[0].userName, courses: courses, utils: utils, progress: progress});
 });
 
 app.post('/liststeacher', urlencodedparser, async function(req, res) {
 
 	const query = 'INSERT INTO utilities (utilName, utilDescription, courseID) VALUES (\'' + req.body.name + '\', \'' + req.body.description + '\',' + req.query.id+ ')';
-
-	
 	await connection.asyncquery(query);
+
+	const getNewUtilID = await connection.asyncquery('SELECT * FROM utilities WHERE utilName = \'' + req.body.name + '\' AND utilDescription = \''+ req.body.description + '\' AND courseID = ' + req.query.id+ ';');
+
+	const userList = await connection.asyncquery('SELECT * FROM user\n' +
+		'    LEFT JOIN user_courses uc on user.userID = uc.userID\n' +
+		'WHERE courseID = ' + req.query.id);
+
+	for (let i = 0; i < userList.length; i++) {
+		const userGetsTask = await connection.asyncquery('INSERT INTO utilities_user (utilID, userID) VALUES (' + getNewUtilID[getNewUtilID.length-1].utilID  +  ', ' + userList[i].userID + ');');
+	}
+	
+
 	res.redirect('/liststeacher');
+});
+
+app.get('/deleteitem', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const util = await connection.asyncquery('SELECT * FROM utilities\n' +
+		'    LEFT JOIN course on course.courseID = utilities.courseID\n' +
+		'    LEFT JOIN teacher on course.teacherID = teacher.teacherID\n' +
+		'    LEFT JOIN user u on course.teacherID = u.teacherID\n' +
+		'WHERE utilities.utilID = ' + req.query.id);
+
+
+	if (util[0] === undefined || util[0].userID !== user[0].userID) {
+		res.send('Not allowed');
+	} else {
+		const deleteItem = await connection.asyncquery('DELETE FROM utilities WHERE utilID = ' + util[0].utilID);
+		res.redirect('/liststeacher');
+	}
+
 });
 
 app.get('/profilteacher', async function (req, res) {
@@ -218,8 +258,39 @@ app.get('/profilteacher', async function (req, res) {
 		utils.push(items);
 	}
 
-	console.log(utils[0][0].utilDescription);
+
 	res.render('profilteacher.ejs', {username: user[0].userName, courses: courses, utils: utils});
+});
+
+app.get('/onecourseteacher', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	if (user[0].userTeacher !== 1) {
+		res.redirect('/profil')
+	}
+
+
+	const checkPermission = await connection.asyncquery('SELECT * FROM course WHERE courseID = ' + req.query.id + ' AND teacherID = ' + user[0].teacherID);
+
+	if (checkPermission[0] === undefined) {
+		res.send('Not allowed');
+		return
+	}
+
+	const userList = await connection.asyncquery('SELECT * FROM user\n' +
+		'    LEFT JOIN user_courses uc on user.userID = uc.userID\n' +
+		'WHERE courseID = ' + req.query.id);
+
+
+	const course = await connection.asyncquery('SELECT * FROM course\n' +
+		'    LEFT JOIN subject s on course.subjectID = s.subjectID\n' +
+		'WHERE courseID = ' + req.query.id);
+
+	res.render('onecourseteacher.ejs', {username: user[0].userName, userList: userList, course: course});
+
 });
 
 function timetableOptimizer(inputDay) {
@@ -264,7 +335,6 @@ app.get('/lists', urlencodedparser, async function (req, res) {
 		utils.push(items);
 	}
 
-	console.log(utils);
 	res.render('lists.ejs', {username: user[0].userName, courses: courses, utils: utils});
 });
 

@@ -1,0 +1,20 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/list.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<% include partials/sidebarteacher.ejs%>
+
+<h1 id="heading"><%=course[0].subjectName%> <%=course[0].courseYear%></h1>
+<div id="contentlists">
+
+    <% userList.forEach(function (item, index) { %>
+        <p><%= item.userName%></p>
+    <%});%>
+
+</div>
+</body>
+</html>
