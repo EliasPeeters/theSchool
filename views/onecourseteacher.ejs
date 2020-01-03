@@ -9,8 +9,8 @@
 <% include partials/sidebarteacher.ejs%>
 
 <h1 id="heading"><%=course[0].subjectName%> <%=course[0].courseYear%></h1>
-<div id="contentlists">
-
+<div id="content">
+    <h2>Schüler</h2>
     <% userList.forEach(function (item, index) { %>
         <p><%= item.userName%></p>
     <%});%>

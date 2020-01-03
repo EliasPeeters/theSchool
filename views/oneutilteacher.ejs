@@ -1,0 +1,40 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/list.css">
+    <link type="text/css" rel="stylesheet" href="assets/utilteacher.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<% include partials/sidebarteacher.ejs%>
+
+<h1 id="heading"><%=course.subjectName%> <%=course.courseYear%></h1>
+<div id="content">
+    <h2>Schüler</h2>
+    <table>
+        <tr>
+            <th>Schüler</th>
+            <th>Aufabe erledigt</th>
+        </tr>
+        <% students.forEach(function (item, index) { %>
+            <tr>
+                <th><%= item.userName%></th>
+                <th><%=done[index]%></th>
+            </tr>
+        <%});%>
+    </table>
+
+    <script>
+        function userDone(input) {
+            if (input === 1) {
+                return 'X'
+            } else {
+                return ' '
+            }
+        }
+    </script>
+
+</div>
+</body>
+</html>

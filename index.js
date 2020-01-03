@@ -179,20 +179,19 @@ app.get('/liststeacher', urlencodedparser, async function (req, res) {
 
 	var utils = [];
 	var progress = [];
-
+	var counter = 0;
 	for (let i = 0; i < courses.length; i++) {
 		let items = await connection.asyncquery('SELECT * FROM utilities left join course on course.courseID = utilities.courseID WHERE course.courseID=' + courses[i].courseID);
-		const numberOfStudents = await connection.asyncquery('SELECT utilities_user.utilitiesuserID FROM utilities_user \n' +
-			'    LEFT JOIN utilities u on utilities_user.utilID = u.utilID\n' +
-			'WHERE courseID = ' + courses[i].courseID);
-
-		const numberOfStudentsDone = await connection.asyncquery('SELECT utilities_user.utilitiesuserID FROM utilities_user \n' +
-			'    LEFT JOIN utilities u on utilities_user.utilID = u.utilID\n' +
-			'WHERE courseID = ' + courses[i].courseID + ' AND utilities_userDone = 1');
-		progress.push({string: numberOfStudentsDone.length + '/' + numberOfStudents.length});
 		utils.push(items);
+		for (let j = 0; j < items.length; j++) {
+			const numberOfStudents = await connection.asyncquery('SELECT utilitiesuserID FROM utilities_user WHERE utilID = ' + items[j].utilID);
+
+			const numberOfStudentsDone = await connection.asyncquery('SELECT utilID FROM utilities_user WHERE utilID = ' + items[j].utilID + ' AND utilities_userDone = 1');
+			progress.push({string: numberOfStudentsDone.length + '/' + numberOfStudents.length});
+			utils[i][j].doneString = numberOfStudentsDone.length + '/' + numberOfStudents.length
+			counter++;
+		}
 	}
-	console.log(progress);
 	res.render('teacherlists.ejs', {username: user[0].userName, courses: courses, utils: utils, progress: progress});
 });
 
@@ -291,6 +290,42 @@ app.get('/onecourseteacher', urlencodedparser, async function (req, res) {
 
 	res.render('onecourseteacher.ejs', {username: user[0].userName, userList: userList, course: course});
 
+});
+
+app.get('/oneutilteacher', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	if (user[0].userTeacher !== 1) {
+		res.redirect('/profil')
+	}
+
+	const course = await connection.asyncquery('SELECT * FROM utilities\n' +
+		'    LEFT JOIN course c on utilities.courseID = c.courseID\n' +
+		'    LEFT JOIN subject s on c.subjectID = s.subjectID\n' +
+		'WHERE utilID = '+ req.query.utilid + ' \n' +
+		'LIMIT 1\n');
+
+	const students = await connection.asyncquery('SELECT * FROM utilities\n' +
+		'    LEFT JOIN user_courses uc on utilities.courseID = uc.courseID\n' +
+		'    LEFT JOIN user u on uc.userID = u.userID\n' +
+		'WHERE utilID = ' + req.query.utilid);
+
+	const doneResult = await connection.asyncquery('SELECT * FROM utilities_user WHERE utilID = ' + req.query.utilid +  ' ORDER BY utilitiesuserID')
+
+	let done = [];
+	for (let i = 0; i < doneResult.length; i++) {
+		if (doneResult[i].utilities_userDone === 1) {
+			done.push('X')
+		} else {
+			done.push(' ')
+		}
+
+	}
+
+	res.render('oneutilteacher.ejs', {username: user[0].userName, students: students, done: done, course: course[0]})
 });
 
 function timetableOptimizer(inputDay) {

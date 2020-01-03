@@ -8,7 +8,7 @@
 <body>
 <% include partials/sidebarteacher.ejs%>
 
-<h1 id="heading">Listen</h1>
+<h1 id="heading">Kurse</h1>
 <div id="contentlists">
 
     <% courses.forEach(function (item, index) { %>
@@ -19,9 +19,9 @@
 
                     <p class="utilTitle"><%=item.utilName%></p>
                     <p class="utilDescription"><%=item.utilDescription%></p>
-                    <p class="utilDescription"><%=progress[index].string%></p>
+                    <p class="utilDescription"><%=item.doneString%></p>
                     <div class="utilButton" id="utilDelete" onmousedown="openPage('/deleteitem?id=<%= item.utilID%>')">Löschen</div>
-                    <div class="utilButton">Übersicht</div>
+                    <div class="utilButton" onmousedown="openPage('/oneutilteacher?utilid=<%= item.utilID%>')">Übersicht</div>
                 </div>
             <% }); %>
 
