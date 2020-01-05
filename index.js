@@ -62,7 +62,6 @@ app.get('/login', async function (req, res) {
 app.post('/login', urlencodedparser, async function (req, res) {
 	var user = 'SELECT * FROM theSchool.user WHERE username=\'' + req.body.username + '\'';
 
-
 	result = await connection.asyncquery(user);
 	if (bcrypt.compareSync(req.body.password, result[0].userPassword)) {
 		var uuidForUser = uuid();
@@ -478,6 +477,35 @@ app.get('/teacher', async function (req, res) {
 app.get('/teacherteacher', async function (req, res) {
 	const teacher = await connection.asyncquery('SELECT * FROM theSchool.teacher');
 	res.render('teacherteacher.ejs', {teacher: teacher});
+});
+
+
+
+
+app.get('/message', async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const messages = await connection.asyncquery('SELECT DATE_FORMAT(messageTime, \'%e/%c/%Y %H:%i\') messageTime, messageID, messageContent, messageFromUserID, messageToUserID, messageRead, messageButton, userName FROM messages\n' +
+		'    LEFT JOIN user on messageFromUserID = userID\n' +
+		'WHERE messageToUserID = ' + user[0].userID + ' order by messageTime DESC');
+
+	res.render('message.ejs', {messages: messages});
+});
+
+app.get('/messageread', async function(req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const updateMessage = await connection.asyncquery('UPDATE messages \n' +
+		'SET messageRead = \'white\', messageButton=\'none\'\n' +
+		'WHERE messageID = ' + req.query.id);
+
+	res.redirect('/message');
 });
 
 app.listen(3000, function(){

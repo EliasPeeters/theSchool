@@ -1,0 +1,32 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/teacher.css">
+    <link type="text/css" rel="stylesheet" href="assets/conversations.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<% include partials/sidebar.ejs%>
+
+<h1 id="heading">Nachrichten</h1>
+
+<div id="contentteacher">
+    <div class="NewConversationbutton">
+        <h3>Neue Unterhaltung</h3>
+
+    </div>
+
+    <% messages.forEach(function (item) { %>
+        <div class="oneConversation" style="border-left: 3px <%=item.messageRead%> solid">
+            <h3><%= item.userName%></h3>
+            <p><%= item.messageContent%></p>
+            <p style="color:lightgray"><%= item.messageTime%></p>
+            <div onmousedown="openPage('/messageread?id=<%=item.messageID%>')" class="readButton" style="display: <%=item.messageButton%>">Gelesen</div>
+        </div>
+    <% });%>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/teacher.css">
+    <link type="text/css" rel="stylesheet" href="assets/conversations.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<% include partials/sidebar.ejs%>
+
+<h1 id="heading">Nachrichten: <%= name%></h1>
+
+<div id="contentteacher">
+
+
+    <% conversations.forEach(function (item) { %>
+        <div class="oneConversation">
+            <img class="userIcon" src="assets/user.png">
+            <h3><%= item.userName%></h3>
+        </div>
+    <% });%>
+
+</div>
+</body>
+</html>

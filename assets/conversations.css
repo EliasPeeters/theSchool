@@ -1,0 +1,40 @@
+.oneConversation {
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+.readButton:Hover {
+    cursor: pointer;
+}
+
+.oneConversation h3 {
+}
+
+.NewConversationbutton {
+    background-color: rgb(42, 138, 245);
+    margin-bottom: 10px;
+    padding: 10px;
+    color: white;
+    border: 0 solid black;
+    text-align: center;
+}
+
+.NewConversationbutton:Hover {
+    cursor: pointer;
+}
+
+.userIcon {
+    width: 50px;
+    float: left;
+    margin-right: 10px;
+}
+
+.readButton {
+    background-color: rgb(42, 138, 245);
+    width: 100px;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin-top: 10px;
+}
