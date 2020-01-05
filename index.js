@@ -51,8 +51,7 @@ connection.asyncquery = util.promisify(connection.query).bind(connection);
 
 
 app.get('/', async function(req, res) {
-	var user = await connection.asyncquery('SELECT * FROM user');
-	res.render('test.ejs', {name: 'test'});
+	res.redirect('/login');
 });
 
 app.get('/login', async function (req, res) {
@@ -69,10 +68,10 @@ app.post('/login', urlencodedparser, async function (req, res) {
 		var uuidForUser = uuid();
 		res.cookie('sessionToken', uuidForUser);
 		loggedInUsers[uuidForUser] = result[0].userID;
-		if (result[0].userTeacher == 1) {
+		if (result[0].userTeacher === 1) {
 			res.redirect('/profilteacher');
 		} else {
-			res.redirect('/timetable');
+			res.redirect('/profil');
 		}
 
 	} else {
@@ -160,7 +159,14 @@ app.get('/profil', async function(req, res){
 		'    left join subject on course.subjectID = subject.subjectID\n' +
 		'    left join teacher on teacher.teacherID = course.teacherID\n' +
 		'where userID = ' + user[0].userID);
-	res.render('profil.ejs', {courses: courses, username: user[0].userName});
+
+	const utilsUnDone = await connection.asyncquery('SELECT * FROM utilities\n' +
+		'    LEFT JOIN utilities_user uu on utilities.utilID = uu.utilID\n' +
+		'	LEFT JOIN course c on utilities.courseID = c.courseID\n' +
+		'	LEFT JOIN subject s on c.subjectID = s.subjectID\n' +
+		'WHERE utilities_userDone = 0 AND userID = ' + user[0].userID);
+
+	res.render('profil.ejs', {courses: courses, username: user[0].userName, utils: utilsUnDone});
 });
 
 app.get('/liststeacher', urlencodedparser, async function (req, res) {

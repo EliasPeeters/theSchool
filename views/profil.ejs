@@ -2,18 +2,34 @@
 <head>
     <link type="text/css" rel="stylesheet" href="assets/main.css">
     <link type="text/css" rel="stylesheet" href="assets/list.css">
+    <link type="text/css" rel="stylesheet" href="assets/teacherprofil.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body>
 <% include partials/sidebar.ejs%>
 <h1 id="heading">Hallo, <%= username%></h1>
-<div id="content">
+<div id="contentprofil">
+    <div class="courses">
+        <h2>Kurse</h2>
+        <% courses.forEach(function (item) { %>
+            <p style="color: <%= item.subjectColor%>"><%=item.subjectName%> </p>
+            <p><%=item.utilName%></p>
+        <% });%>
+    </div>
 
-    <% courses.forEach(function (item) { %>
-        <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%> </h2>
-        <p><%=item.utilName%></p>
-    <% });%>
+    <div class="courses">
+        <h2>Offene Aufgaben</h2>
+        <% utils.forEach(function (item) { %>
+            <div class="utilCard2">
+                <p><%=item.utilName%> </p>
+                <p class="utilDescription2"><%=item.utilDescription%> </p>
+                <p class="utilDescription2">(<%=item.subjectName%>)</p>
+            </div>
+
+
+        <% });%>
+    </div>
 </div>
 
     </body>
