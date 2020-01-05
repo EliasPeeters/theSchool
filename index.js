@@ -366,9 +366,25 @@ app.get('/lists', urlencodedparser, async function (req, res) {
 	var utils = [];
 
 	for (let i = 0; i < courses.length; i++) {
-		let items = await connection.asyncquery('SELECT * FROM utilities left join course on course.courseID = utilities.courseID LEFT JOIN subject on subject.subjectID = course.subjectID WHERE course.courseID=' + courses[i].courseID);
+		let items = await connection.asyncquery('SELECT * FROM utilities\n' +
+			'    left join course on course.courseID = utilities.courseID\n' +
+			'    LEFT JOIN subject on subject.subjectID = course.subjectID\n' +
+			'    LEFT JOIN utilities_user uu on utilities.utilID = uu.utilID\n' +
+			'WHERE course.courseID=' +  + courses[i].courseID + ' AND userID = ' + user[0].userID);
 		utils.push(items);
+		if (items[i] !== undefined) {
+			for (let j = 0; j < items[i].length; j++) {
+				if (items[i][j].utilities_userDone === 1) {
+					items[i][j].color = 'green';
+				} else {
+					items[i][j].color = 'red';
+				}
+			}
+		}
 	}
+
+	console.log(utils);
+
 
 	res.render('lists.ejs', {username: user[0].userName, courses: courses, utils: utils});
 });

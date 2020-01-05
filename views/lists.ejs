@@ -2,6 +2,7 @@
 <head>
     <link type="text/css" rel="stylesheet" href="assets/main.css">
     <link type="text/css" rel="stylesheet" href="assets/list.css">
+    <link type="text/css" rel="stylesheet" href="assets/liststudents.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 
@@ -9,17 +10,21 @@
 <% include partials/sidebar.ejs%>
 
 <h1 id="heading">Listen</h1>
-<div id="contentlists">
-
+<div id="contentlist">
     <% courses.forEach(function (item, index) { %>
-        <div class="subjectCard">
-            <h1 style="color: <%= item.subjectColor%>"><%=item.subjectName%></h1>
+        <div class="subject">
+            <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%></h2>
             <% utils[index].forEach(function(item){ %>
-            <p class="utilTitle"><%=item.utilName%></p>
-            <p class="utilDescription"><%=item.utilDescription%></p>
+                <div class="util" style="border-left: solid 3px <%= item.color%>>;">
+                    <p class="utilTitleNew"><%=item.utilName%></p>
+                    <p class="utilDescriptionNew"><%=item.utilDescription%></p>
+                    <div class="utilButtonNew"><p>Erledigt</p></div>
+                </div>
             <% }); %>
         </div>
     <% });%>
+
 </div>
+
 </body>
 </html>

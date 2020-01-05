@@ -1,5 +1,4 @@
 #contentlists {
-    height: 550px;
     margin-left: 170px;
     margin-right: 30px;
     margin-top: 10px;
@@ -25,7 +24,7 @@
 }
 
 .utilCard {
-    border: 1px solid gray;
+    border: 1px solid lightgray;
     margin-bottom: 10px;
     padding: 10px;
     float: left;
