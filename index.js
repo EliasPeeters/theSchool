@@ -375,20 +375,53 @@ app.get('/lists', urlencodedparser, async function (req, res) {
 		if (items[i] !== undefined) {
 			for (let j = 0; j < items[i].length; j++) {
 				if (items[i][j].utilities_userDone === 1) {
-					items[i][j].color = 'green';
+					utils[i][j].color = 'green';
 				} else {
-					items[i][j].color = 'red';
+					utils[i][j].color = 'red';
 				}
 			}
 		}
 	}
-
-	console.log(utils);
-
-
+	for (let i = 0; i < utils.length; i++) {
+		for (let j = 0; j < utils[i].length; j++) {
+			if (utils[i][j].utilities_userDone === 1) {
+				utils[i][j].color = 'green';
+				utils[i][j].button = 'Nicht erledigt';
+			} else {
+				utils[i][j].color = 'red';
+				utils[i][j].button = 'Erledigt';
+			}
+		}
+	}
 	res.render('lists.ejs', {username: user[0].userName, courses: courses, utils: utils});
 });
 
+app.get('/utilFinished', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const util = await connection.asyncquery('SELECT * FROM utilities\n' +
+		'    LEFT JOIN course c on utilities.courseID = c.courseID\n' +
+		'    LEFT JOIN user_courses uc on utilities.courseID = uc.courseID\n' +
+		'    LEFT JOIN user u on uc.userID = u.userID\n' +
+		'WHERE utilID = ' + req.query.id + ' AND u.userID = ' + user[0].userID);
+
+	if (util[0] === undefined) {
+		res.send('Not allowed');
+	} else {
+		const doneOfNotDone = await connection.asyncquery('SELECT * FROM utilities_user WHERE utilID = ' + req.query.id + ' AND userID =' + user[0].userID);
+		console.log(doneOfNotDone)
+		if (doneOfNotDone[0].utilities_userDone === 0) {
+			const updateUtil = await connection.asyncquery('UPDATE utilities_user SET utilities_userDone=1 WHERE utilID = ' +  req.query.id + ' AND userID=' + user[0].userID);
+		} else {
+			const updateUtil = await connection.asyncquery('UPDATE utilities_user SET utilities_userDone=0 WHERE utilID = ' +  req.query.id + ' AND userID=' + user[0].userID);
+		}
+		res.redirect('/lists');
+	}
+
+});
 
 app.get('/timetable',urlencodedparser, async function (req, res) {
 	if (!logined(req, res)) {

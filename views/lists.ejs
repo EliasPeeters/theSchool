@@ -15,10 +15,10 @@
         <div class="subject">
             <h2 style="color: <%= item.subjectColor%>"><%=item.subjectName%></h2>
             <% utils[index].forEach(function(item){ %>
-                <div class="util" style="border-left: solid 3px <%= item.color%>>;">
+                <div class="util" style="border-left: solid 3px <%= item.color%>">
                     <p class="utilTitleNew"><%=item.utilName%></p>
                     <p class="utilDescriptionNew"><%=item.utilDescription%></p>
-                    <div class="utilButtonNew"><p>Erledigt</p></div>
+                    <div class="utilButtonNew" onmousedown="openPage('/utilFinished?id=<%=item.utilID%>')"><p><%=item.button%></p></div>
                 </div>
             <% }); %>
         </div>

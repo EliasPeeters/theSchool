@@ -41,3 +41,7 @@
     position: relative;
     margin-top: -10px;
 }
+
+.utilButtonNew:Hover {
+    cursor: pointer;
+}
