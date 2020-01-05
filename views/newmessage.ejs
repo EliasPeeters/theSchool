@@ -13,7 +13,13 @@
 <h1 id="heading">Neue Nachrichten</h1>
 
 <div id="contentteacher">
-
+    <form id="newMessage" method="post" action="/newmessage">
+        <p>Nachricht an:</p>
+        <input name="username" type="text" value="<%=username%>">
+        <p>Inhalt:</p>
+        <input class="messagecontent" name="message" type="text">
+        <input class="messageSubmit" type="submit" value="Senden">
+    </form>
 
 </div>
 </body>

@@ -38,3 +38,32 @@
     padding: 5px;
     margin-top: 10px;
 }
+
+#newMessage {
+    background-color: white;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#newMessage input {
+    width: 80%;
+    height: 30px;
+    margin-left: 10%;
+}
+
+#newMessage p {
+    margin-top: 10px;
+    color: lightgray;
+    margin-left: 10%;
+}
+
+.messagecontent {
+    height: 30px;
+}
+
+.messageSubmit {
+    background-color: rgb(42, 138, 245);
+    border: none;
+    color: white;
+    margin-top: 30px;
+}

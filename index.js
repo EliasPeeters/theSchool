@@ -495,6 +495,21 @@ app.get('/message', async function (req, res) {
 	res.render('message.ejs', {messages: messages});
 });
 
+app.get('/newmessage', async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	let username;
+	if (req.query.name !== undefined) {
+		username = req.query.name;
+	} else {
+		 username = ' '
+	}
+
+	res.render('newmessage.ejs', {username: username})
+});
+
 app.get('/messageread', async function(req, res) {
 	if (!logined(req, res)) {
 		return
