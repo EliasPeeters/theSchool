@@ -469,6 +469,11 @@ app.get('/teacher', async function (req, res) {
 	res.render('teacher.ejs', {teacher: teacher});
 });
 
+app.get('/teacherteacher', async function (req, res) {
+	const teacher = await connection.asyncquery('SELECT * FROM theSchool.teacher');
+	res.render('teacherteacher.ejs', {teacher: teacher});
+});
+
 app.listen(3000, function(){
 	console.log('Running on 3000');
 });
