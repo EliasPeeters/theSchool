@@ -8,7 +8,7 @@
 
 <body>
 
-<% include partials/sidebar.ejs%>
+<% include partials/sidebarteacher.ejs%>
 
 <h1 id="heading">Nachrichten</h1>
 
@@ -19,12 +19,12 @@
     </div>
 
     <% messages.forEach(function (item) { %>
-        <div class="oneConversation" style="border-left: 3px <%=item.messageRead%> solid">
-            <h3><%= item.userName%></h3>
-            <p><%= item.messageContent%></p>
-            <p style="color:lightgray"><%= item.messageTime%></p>
-            <div onmousedown="openPage('/messageread?id=<%=item.messageID%>')" class="readButton" style="display: <%=item.messageButton%>">Gelesen</div>
-        </div>
+    <div class="oneConversation" style="border-left: 3px <%=item.messageRead%> solid">
+        <h3><%= item.userName%></h3>
+        <p><%= item.messageContent%></p>
+        <p style="color:lightgray"><%= item.messageTime%></p>
+        <div onmousedown="openPage('/messageread?id=<%=item.messageID%>')" class="readButton" style="display: <%=item.messageButton%>">Gelesen</div>
+    </div>
     <% });%>
 
 </div>

@@ -504,10 +504,94 @@ app.get('/newmessage', async function (req, res) {
 	if (req.query.name !== undefined) {
 		username = req.query.name;
 	} else {
-		 username = ' '
+		 username = ''
 	}
+	let error;
+	if (req.query.error !== undefined) {
+		error = req.query.error;
+	} else {
+		error = ''
+	}
+	console.log(error)
 
-	res.render('newmessage.ejs', {username: username})
+	res.render('newmessage.ejs', {username: username, error: error})
+});
+
+app.post('/newmessage', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const userNameTO = await connection.asyncquery('SELECT userID from user where userName = \''+req.body.username + '\'');
+	console.log(userNameTO);
+
+	if (userNameTO[0] === undefined) {
+		res.redirect('/newmessage?error=Den Benutzer gibt es nicht');
+		return
+	}
+	if (req.body.message === undefined || req.body.message === '') {
+		res.redirect('/newmessage?error=Die Nachricht hat keinen Inhalt');
+		return;
+	}
+	const query = await connection.asyncquery('INSERT INTO messages (messageContent, messageTime, messageFromUserID, messageToUserID) VALUES (\'' + req.body.message + '\', now(), ' + user[0].userID + ', ' + userNameTO[0].userID + ')')
+	res.redirect('/message');
+});
+
+app.get('/messageteacher', async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const messages = await connection.asyncquery('SELECT DATE_FORMAT(messageTime, \'%e/%c/%Y %H:%i\') messageTime, messageID, messageContent, messageFromUserID, messageToUserID, messageRead, messageButton, userName FROM messages\n' +
+		'    LEFT JOIN user on messageFromUserID = userID\n' +
+		'WHERE messageToUserID = ' + user[0].userID + ' order by messageTime DESC');
+
+	res.render('messageteacher.ejs', {messages: messages});
+});
+
+app.get('/newmessageteacher', async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+	let username;
+	if (req.query.name !== undefined) {
+		username = req.query.name;
+	} else {
+		username = ''
+	}
+	let error;
+	if (req.query.error !== undefined) {
+		error = req.query.error;
+	} else {
+		error = ''
+	}
+	console.log(error)
+
+	res.render('newmessageteacher.ejs', {username: username, error: error})
+});
+
+app.post('/newmessageteacher', urlencodedparser, async function (req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const userNameTO = await connection.asyncquery('SELECT userID from user where userName = \''+req.body.username + '\'');
+	console.log(userNameTO);
+
+	if (userNameTO[0] === undefined) {
+		res.redirect('/newmessage?error=Den Benutzer gibt es nicht');
+		return
+	}
+	if (req.body.message === undefined || req.body.message === '') {
+		res.redirect('/newmessage?error=Die Nachricht hat keinen Inhalt');
+		return;
+	}
+	const query = await connection.asyncquery('INSERT INTO messages (messageContent, messageTime, messageFromUserID, messageToUserID) VALUES (\'' + req.body.message + '\', now(), ' + user[0].userID + ', ' + userNameTO[0].userID + ')')
+	res.redirect('/messageteacher');
 });
 
 app.get('/messageread', async function(req, res) {
@@ -519,7 +603,6 @@ app.get('/messageread', async function(req, res) {
 	const updateMessage = await connection.asyncquery('UPDATE messages \n' +
 		'SET messageRead = \'white\', messageButton=\'none\'\n' +
 		'WHERE messageID = ' + req.query.id);
-
 	res.redirect('/message');
 });
 
