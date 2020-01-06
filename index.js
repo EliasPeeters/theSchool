@@ -6,7 +6,7 @@ const uuid = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const cookieparser = require('cookie-parser');
 const request = require('request');
-
+var MobileDetect = require('mobile-detect');
 
 
 const app = express();
@@ -56,7 +56,14 @@ app.get('/', async function(req, res) {
 
 app.get('/login', async function (req, res) {
 	var error = req.query.error;
-	res.render('login.ejs', {error: error});
+	md = new MobileDetect(req.headers['user-agent']);
+
+	if (md.mobile() === null) {
+		res.render('login.ejs', {error: error});
+	} else {
+		res.render('loginmobil.ejs', {error: error});
+	}
+
 });
 
 app.post('/login', urlencodedparser, async function (req, res) {
@@ -87,10 +94,35 @@ app.post('/login', urlencodedparser, async function (req, res) {
 });
 
 app.get('/register', async function (req, res) {
-	res.render('register.ejs');
+	var error = req.query.error;
+	md = new MobileDetect(req.headers['user-agent']);
+
+	if (md.mobile() === null) {
+		res.render('register.ejs', {error: error});
+	} else {
+		res.render('registermobil.ejs', {error: error});
+	}
+
 });
 
 app.post('/register', urlencodedparser, async function (req, res) {
+	if (req.body.username === undefined || req.body.username === '') {
+		res.redirect('/register?error=Leerer Username');
+		return
+	}
+	if (req.body.password === undefined || req.body.password === '') {
+		res.redirect('/register?error=Leeres Passwort');
+		return
+	}
+
+	let checkAvailable = await connection.asyncquery('SELECT * FROM user WHERE userName = \'' + req.body.username + '\'');
+
+	if (checkAvailable.length !== 0) {
+		res.redirect('/register?error=Username vergeben');
+		return
+	}
+
+
 	var hash = bcrypt.hashSync(req.body.password, saltRounds);
 	const query = 'INSERT INTO `theSchool`.`user` (`userName`, `userPassword`) VALUES (\'' + req.body.username + '\', \'' + hash + '\');';
 	await connection.asyncquery(query);
