@@ -444,7 +444,13 @@ app.get('/lists', urlencodedparser, async function (req, res) {
 			}
 		}
 	}
-	res.render('lists.ejs', {username: user[0].userName, courses: courses, utils: utils});
+	md = new MobileDetect(req.headers['user-agent']);
+	if (md.mobile() === null) {
+		res.render('lists.ejs', {username: user[0].userName, courses: courses, utils: utils});
+	} else {
+		res.render('listsmobile.ejs', {username: user[0].userName, courses: courses, utils: utils});
+	}
+
 });
 
 app.get('/utilFinished', urlencodedparser, async function (req, res) {
@@ -511,8 +517,14 @@ app.get('/timetable',urlencodedparser, async function (req, res) {
 	var wednesday = timetableOptimizer(wednesdayDB);
 	var thursday = timetableOptimizer(thursdayDB);
 	var friday = timetableOptimizer(fridayDB);
+	md = new MobileDetect(req.headers['user-agent']);
 
-	res.render('timetable.ejs', {monday: monday, tuesday: tuesday, wednesday: wednesday, thursday: thursday, friday: friday});
+	if (md.mobile() === null) {
+		res.render('timetable.ejs', {monday: monday, tuesday: tuesday, wednesday: wednesday, thursday: thursday, friday: friday});
+	} else {
+		res.render('timetablemobile.ejs', {monday: monday, tuesday: tuesday, wednesday: wednesday, thursday: thursday, friday: friday});
+	}
+
 });
 
 app.get('/teacher', async function (req, res) {

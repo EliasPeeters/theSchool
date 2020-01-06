@@ -1,8 +1,29 @@
+#contenttimetable {
+    background-color: white;
+    height: 800px;
+    margin-left: 3%;
+    margin-right: 30px;
+    margin-top: 10px;
+    padding: 20px;
+    width: 87%;
+}
+
+#helper {
+    height: 150px;
+}
+
+#contentlists {
+    margin-left: 3%;
+    margin-right: 30px;
+    padding: 20px;
+    padding-bottom: 50px;
+}
+
 #contentlist {
-     margin-left: 170px;
-     margin-right: 30px;
-     margin-top: 10px;
- }
+    margin-left: 3%;
+    margin-right: 30px;
+    margin-top: 10px;
+}
 
 .subject {
     padding: 20px;
