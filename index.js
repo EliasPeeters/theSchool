@@ -62,7 +62,15 @@ app.get('/login', async function (req, res) {
 app.post('/login', urlencodedparser, async function (req, res) {
 	var user = 'SELECT * FROM theSchool.user WHERE username=\'' + req.body.username + '\'';
 
+
+
 	result = await connection.asyncquery(user);
+	console.log(result);
+	if (result[0].userName === undefined) {
+		res.redirect('/login?error=Username und/oder Passwort sind falsch');
+		return
+	}
+
 	if (bcrypt.compareSync(req.body.password, result[0].userPassword)) {
 		var uuidForUser = uuid();
 		res.cookie('sessionToken', uuidForUser);
@@ -74,7 +82,7 @@ app.post('/login', urlencodedparser, async function (req, res) {
 		}
 
 	} else {
-		res.redirect('/login?error=wrong');
+		res.redirect('/login?error=Username und/oder Passwort sind falsch');
 	}
 });
 

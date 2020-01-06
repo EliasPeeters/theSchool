@@ -1,5 +1,6 @@
 <html>
     <body>
+        <title><%=course[0].subjectName%></title>
         <% include partials/navigation.ejs%>
         <h1 style="color: <%=course[0].subjectColor%>"><%=course[0].subjectName%></h1>
         <p>Lehrer: <%=course[0].teacherFirstName%> <%=course[0].teacherLastName%> (<%=course[0].teacherAcronym%>)</p>

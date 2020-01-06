@@ -1,15 +1,31 @@
 <html>
 <head>
     <title>Register</title>
+    <link type="text/css" rel="stylesheet" href="assets/login.css">
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<h1>Login</h1>
-<form action="/register" method="post">
-    <p>Usename</p><input type="text" name="username"><br>
-    <p>Password</p> <input type="text" name="password"><br>
-    <input type="submit" value="Register">
-</form>
+
+<script>
+    function openPage(url) {
+        window.location.href = url;
+    }
+</script>
+
+<div id="loginbox">
+    <img src="assets/ohglogo.svg">
+    <h2>Register</h2>
+    <p></p>
+    <form action="/register" method="post">
+        <input type="text" name="username" autocomplete="off"><p>Usename</p><br>
+        <input type="password" name="password" autocomplete="off"><p>Password</p> <br>
+        <input id="loginbutton" type="submit" value="Register">
+        <p onmousedown="openPage('/login')" class="switch">Bereits Registriert?</p>
+    </form>
+</div>
+
 </body>
 
 </html>
