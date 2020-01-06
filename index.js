@@ -205,7 +205,13 @@ app.get('/profil', async function(req, res){
 		'	LEFT JOIN subject s on c.subjectID = s.subjectID\n' +
 		'WHERE utilities_userDone = 0 AND userID = ' + user[0].userID);
 
-	res.render('profil.ejs', {courses: courses, username: user[0].userName, utils: utilsUnDone});
+	md = new MobileDetect(req.headers['user-agent']);
+
+	if (md.mobile() === null) {
+		res.render('profil.ejs', {courses: courses, username: user[0].userName, utils: utilsUnDone});
+	} else {
+		res.render('profilmobile.ejs', {courses: courses, username: user[0].userName, utils: utilsUnDone});
+	}
 });
 
 app.get('/liststeacher', urlencodedparser, async function (req, res) {
@@ -511,7 +517,14 @@ app.get('/timetable',urlencodedparser, async function (req, res) {
 
 app.get('/teacher', async function (req, res) {
 	const teacher = await connection.asyncquery('SELECT * FROM theSchool.teacher');
-	res.render('teacher.ejs', {teacher: teacher});
+	md = new MobileDetect(req.headers['user-agent']);
+
+	if (md.mobile() === null) {
+		res.render('teacher.ejs', {teacher: teacher});
+	} else {
+		res.render('teachermobile.ejs', {teacher: teacher});
+	}
+
 });
 
 app.get('/teacherteacher', async function (req, res) {

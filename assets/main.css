@@ -20,3 +20,61 @@ body {
     margin-left: 170px;
     padding-top: 20px;
 }
+
+#topBar {
+    width: 90%;
+    background-color: white;
+    margin: 30px auto;
+    padding: 10px;
+    position: fixed;
+    left: 3%;
+    z-index: 0;
+}
+
+#topBar h2 {
+    font-size: 55px;
+
+}
+
+#mobilemenu {
+    width: 95%;
+    height: 90%;
+    left: 2.5%;
+    margin-top: 10px;
+    background-color: white;
+    position: fixed;
+    visibility: hidden;
+    z-index: 100;
+}
+
+#mobilemenu li {
+    list-style: none;
+    text-align: center;
+    text-underline: none;
+    font-size: 50px;
+    margin-bottom: 30px;
+}
+
+#mobilemenu a {
+    text-decoration: none;
+    color: black;
+
+}
+
+#closeMenu {
+    text-align: right;
+    height: 80px;
+    position: relative;
+    font-size: 50px;
+    font-weight: bold;
+    padding-right: 30px;
+}
+
+#openMenu {
+    position: fixed;
+    z-index: 1;
+    right: 2%;
+    top: 55px;
+    height: 80px;
+    width: 150px;
+}

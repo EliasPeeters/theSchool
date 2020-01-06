@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Lehrer</title>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/teachermobile.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<% include partials/menu.ejs%>
+<div id="topBar"><h2>Lehrer</h2></div>
+<div id="helper"></div>
+
+<h1 id="heading">Lehrer</h1>
+
+<div id="contentteacher">
+    <% teacher.forEach(function (item) { %>
+    <div class="teacherCard">
+        <img src="assets/teacher<%=item.teacherAcronym%>.png">
+        <p class="teacherName"><%=item.teacherFirstName%> <%=item.teacherLastName%> </p>
+        <p class="teacherRoom">Raum: <%=item.teacherRoom%> </p>
+        <p class="teacherShort">Kürzel: <%=item.teacherAcronym%> </p>
+    </div>
+    <% });%>
+</div>
+</body>
+</html>

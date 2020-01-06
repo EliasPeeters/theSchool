@@ -1,0 +1,22 @@
+<div id="openMenu" onmousedown="openMenu()"><h1>Menu</h1></div>
+
+<div id="mobilemenu">
+    <div id="closeMenu" onmousedown="closeMenu()">X</div>
+    <ul>
+        <li><a href="/profil">Profil</a></li>
+        <li><a href="/timetable">Stundenplan</a></li>
+        <li><a href="/teacher">Lehrer</a></li>
+        <li><a href="/lists">Listen</a></li>
+        <li><a href="/message">Nachrichten</a></li>
+    </ul>
+</div>
+
+<script>
+    function closeMenu() {
+        document.getElementById('mobilemenu').style.visibility ='hidden';
+    }
+
+    function openMenu() {
+        document.getElementById('mobilemenu').style.visibility ='visible';
+    }
+</script>
