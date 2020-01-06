@@ -450,7 +450,6 @@ app.get('/lists', urlencodedparser, async function (req, res) {
 	} else {
 		res.render('listsmobile.ejs', {username: user[0].userName, courses: courses, utils: utils});
 	}
-
 });
 
 app.get('/utilFinished', urlencodedparser, async function (req, res) {
@@ -556,8 +555,13 @@ app.get('/message', async function (req, res) {
 	const messages = await connection.asyncquery('SELECT DATE_FORMAT(messageTime, \'%e/%c/%Y %H:%i\') messageTime, messageID, messageContent, messageFromUserID, messageToUserID, messageRead, messageButton, userName FROM messages\n' +
 		'    LEFT JOIN user on messageFromUserID = userID\n' +
 		'WHERE messageToUserID = ' + user[0].userID + ' order by messageTime DESC');
+	md = new MobileDetect(req.headers['user-agent']);
+	if (md.mobile() === null) {
+		res.render('message.ejs', {messages: messages});
+	} else {
+		res.render('messagemobile.ejs', {messages: messages});
+	}
 
-	res.render('message.ejs', {messages: messages});
 });
 
 app.get('/newmessage', async function (req, res) {
@@ -579,7 +583,14 @@ app.get('/newmessage', async function (req, res) {
 	}
 	console.log(error)
 
-	res.render('newmessage.ejs', {username: username, error: error})
+	md = new MobileDetect(req.headers['user-agent']);
+	if (md.mobile() === null) {
+		res.render('newmessage.ejs', {username: username, error: error})
+	} else {
+		res.render('newmessagemobile.ejs', {username: username, error: error})
+	}
+
+
 });
 
 app.post('/newmessage', urlencodedparser, async function (req, res) {

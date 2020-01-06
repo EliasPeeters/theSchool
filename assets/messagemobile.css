@@ -1,0 +1,91 @@
+.oneConversation {
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+.readButton:Hover {
+    cursor: pointer;
+}
+
+.oneConversation h3 {
+}
+
+.NewConversationbutton {
+    background-color: rgb(42, 138, 245);
+    margin-bottom: 10px;
+    padding: 10px;
+    color: white;
+    border: 0 solid black;
+    text-align: center;
+}
+
+.NewConversationbutton:Hover {
+    cursor: pointer;
+}
+
+.userIcon {
+    width: 50px;
+    float: left;
+    margin-right: 10px;
+}
+
+.readButton {
+    background-color: rgb(42, 138, 245);
+    width: 100px;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+#newMessage {
+    background-color: white;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#newMessage input {
+    width: 80%;
+    height: 30px;
+    margin-left: 10%;
+}
+
+#newMessage p {
+    margin-top: 10px;
+    color: lightgray;
+    margin-left: 10%;
+}
+
+.messagecontent {
+    height: 30px;
+}
+
+.messageSubmit {
+    background-color: rgb(42, 138, 245);
+    border: none;
+    color: white;
+    margin-top: 30px;
+}
+
+#contenttimetable {
+    margin-left: 3%;
+    margin-right: 30px;
+    margin-top: 10px;
+    padding: 20px;
+    width: 87%;
+}
+
+#helper {
+    height: 150px;
+}
+
+form input {
+    -webkit-appearance: none;
+}
+
+#newMessage input {
+    font-size: 40px;
+    height: 60px;
+}
+

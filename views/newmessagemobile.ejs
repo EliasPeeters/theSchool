@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Neue Nachricht</title>
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link type="text/css" rel="stylesheet" href="assets/teacher.css">
+    <link type="text/css" rel="stylesheet" href="assets/messagemobile.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<% include partials/menu.ejs%>
+<div id="topBar"><h2>Neue Nachrichten</h2></div>
+<div id="helper"></div>
+
+
+
+<div id="contenttimetable">
+    <form id="newMessage" method="post" action="/newmessage">
+        <p style="color: red"><%=error%></p>
+        <p>Nachricht an:</p>
+        <input name="username" type="text" value="<%=username%>">
+        <p>Inhalt:</p>
+        <input class="messageContent" name="message" type="text">
+        <input class="messageSubmit" type="submit" value="Senden">
+    </form>
+
+</div>
+</body>
+</html>
