@@ -17,6 +17,7 @@ app.set('view engine', 'ejs');
 app.use(cookieparser());
 app.use('/assets', express.static('assets'));
 
+//creating mysql connection
 const connection = mysql.createConnection({
 	host: '192.168.150.60',
 	user: 'theSchool',
@@ -24,6 +25,7 @@ const connection = mysql.createConnection({
 	database: 'theSchool'
 });
 
+//connecting and checking the connection
 connection.connect((err) => {
 	if (err) {
 		console.log(err)
@@ -32,7 +34,10 @@ connection.connect((err) => {
 	}
 });
 
+//function to check if user is logged in
+//every rout begins with the login function to check if user is logged in
 function logined(req, res) {
+	//if not logged in => redirect to login
 	if (req.cookies.sessionToken === undefined) {
 		res.redirect('/login');
 		return false;
@@ -42,22 +47,30 @@ function logined(req, res) {
 		return false;
 	}
 	return true;
-
 }
 
+//add the urlencodedparser which curls threw the url
 const urlencodedparser = bodyparser.urlencoded({extended: false});
 
+//adding new mysql function
+//works async
 connection.asyncquery = util.promisify(connection.query).bind(connection);
 
 
+//redirect empty url to login
 app.get('/', async function(req, res) {
 	res.redirect('/login');
 });
 
+//login page
 app.get('/login', async function (req, res) {
+	//check if error exists
+	//like wrong password
 	var error = req.query.error;
+	//check for mobile
 	md = new MobileDetect(req.headers['user-agent']);
 
+	//send desktop or mobile page
 	if (md.mobile() === null) {
 		res.render('login.ejs', {error: error});
 	} else {
@@ -66,18 +79,19 @@ app.get('/login', async function (req, res) {
 
 });
 
+//login send
 app.post('/login', urlencodedparser, async function (req, res) {
 	var user = 'SELECT * FROM theSchool.user WHERE username=\'' + req.body.username + '\'';
-
-
-
+	//get the user from the query by username
 	result = await connection.asyncquery(user);
-	console.log(result);
+
 	if (result[0].userName === undefined) {
 		res.redirect('/login?error=Username und/oder Passwort sind falsch');
 		return
 	}
+	//if username does not exist => send back to login with error
 
+	//hash the password again and check with password from db
 	if (bcrypt.compareSync(req.body.password, result[0].userPassword)) {
 		var uuidForUser = uuid();
 		res.cookie('sessionToken', uuidForUser);
@@ -89,12 +103,15 @@ app.post('/login', urlencodedparser, async function (req, res) {
 		}
 
 	} else {
+		//wrong password => send back to login
 		res.redirect('/login?error=Username und/oder Passwort sind falsch');
 	}
 });
 
+//register page
 app.get('/register', async function (req, res) {
 	var error = req.query.error;
+	//check for error
 	md = new MobileDetect(req.headers['user-agent']);
 
 	if (md.mobile() === null) {
@@ -102,10 +119,11 @@ app.get('/register', async function (req, res) {
 	} else {
 		res.render('registermobil.ejs', {error: error});
 	}
-
 });
 
+//register send
 app.post('/register', urlencodedparser, async function (req, res) {
+	//check if username and password arent empty
 	if (req.body.username === undefined || req.body.username === '') {
 		res.redirect('/register?error=Leerer Username');
 		return
@@ -115,6 +133,7 @@ app.post('/register', urlencodedparser, async function (req, res) {
 		return
 	}
 
+	//check if username is not in use
 	let checkAvailable = await connection.asyncquery('SELECT * FROM user WHERE userName = \'' + req.body.username + '\'');
 
 	if (checkAvailable.length !== 0) {
@@ -122,16 +141,21 @@ app.post('/register', urlencodedparser, async function (req, res) {
 		return
 	}
 
-
+	//hash the password
 	var hash = bcrypt.hashSync(req.body.password, saltRounds);
+	//insert new user to db
 	const query = 'INSERT INTO `theSchool`.`user` (`userName`, `userPassword`) VALUES (\'' + req.body.username + '\', \'' + hash + '\');';
 	await connection.asyncquery(query);
+	//redirect user to database
 	res.redirect('/login');
 });
 
+//logout the user
 app.get('/logout', function (req, res) {
+	//remove everything from user
 	delete loggedInUsers[req.cookies.sessionToken];
 	res.clearCookie('sessionToken');
+	//send back to login
 	res.redirect('/login');
 });
 
@@ -164,11 +188,13 @@ app.get('/onecourse', urlencodedparser, async function (req, res) {
 	let queryUserIsInCourse = 'SELECT * FROM theSchool.user_courses WHERE userID = ' + user[0].userID + ' AND courseID = ' + courseID + ';'
 	let resultUserIsInCourse = await connection.asyncquery(queryUserIsInCourse);
 
+	// if user is not in the course => send back to login page
 	if (resultUserIsInCourse.length === 0) {
 		res.redirect('/profil');
 		return;
 	}
 
+	//get infos about the course
 	let queryCourse = 'SELECT * FROM theSchool.course\n' +
 		'    LEFT JOIN theSchool.teacher on teacher.teacherID =course.teacherID\n' +
 		'    LEFT JOIN theSchool.subject on subject.subjectID = course.subjectID\n' +
@@ -176,6 +202,7 @@ app.get('/onecourse', urlencodedparser, async function (req, res) {
 
 	let resultCourse = await connection.asyncquery(queryCourse);
 
+	//get the utilites for one course
 	let queryUtilities ='SELECT * FROM theSchool.utilities WHERE courseID = ' + req.query.id;
 	let resultUtilities = await connection.asyncquery(queryUtilities);
 
@@ -326,7 +353,7 @@ app.get('/onecourseteacher', urlencodedparser, async function (req, res) {
 	const checkPermission = await connection.asyncquery('SELECT * FROM course WHERE courseID = ' + req.query.id + ' AND teacherID = ' + user[0].teacherID);
 
 	if (checkPermission[0] === undefined) {
-		res.send('Not allowed');
+		res.render('errorpage.ejs', {error: 'Dies ist nicht erlaubt'})
 		return
 	}
 
@@ -489,27 +516,27 @@ app.get('/timetable',urlencodedparser, async function (req, res) {
 		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
 		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
 		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
-		'WHERE ctWeekday = 1 AND userID = ' + user[0].userID);
+		'WHERE ctWeekday = 1 AND userID = ' + user[0].userID + ' ORDER BY ctLesson');
 	const tuesdayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
 		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
 		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
 		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
-		'WHERE ctWeekday = 2 AND userID = ' + user[0].userID);
+		'WHERE ctWeekday = 2 AND userID = ' + user[0].userID + ' ORDER BY ctLesson');
 	const wednesdayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
 		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
 		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
 		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
-		'WHERE ctWeekday = 3 AND userID = ' + user[0].userID);
+		'WHERE ctWeekday = 3 AND userID = ' + user[0].userID + ' ORDER BY ctLesson');
 	const thursdayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
 		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
 		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
 		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
-		'WHERE ctWeekday = 4 AND userID = ' + user[0].userID);
+		'WHERE ctWeekday = 4 AND userID = ' + user[0].userID + ' ORDER BY ctLesson');
 	const fridayDB = await connection.asyncquery('SELECT * FROM theSchool.course\n' +
 		'    LEFT JOIN theSchool.subject on course.subjectID = subject.subjectID\n' +
 		'    LEFT JOIN theSchool.user_courses on user_courses.courseID = course.courseID\n' +
 		'    LEFT JOIN theSchool.courses_times ON courses_times.coursesID = course.courseID\n' +
-		'WHERE ctWeekday = 5 AND userID = ' + user[0].userID);
+		'WHERE ctWeekday = 5 AND userID = ' + user[0].userID + ' ORDER BY ctLesson');
 
 	var monday = timetableOptimizer(mondayDB);
 	var tuesday = timetableOptimizer(tuesdayDB);
@@ -518,6 +545,8 @@ app.get('/timetable',urlencodedparser, async function (req, res) {
 	var friday = timetableOptimizer(fridayDB);
 	md = new MobileDetect(req.headers['user-agent']);
 
+	console.log(thursday);
+	console.log(thursdayDB);
 	if (md.mobile() === null) {
 		res.render('timetable.ejs', {monday: monday, tuesday: tuesday, wednesday: wednesday, thursday: thursday, friday: friday});
 	} else {
@@ -665,11 +694,11 @@ app.post('/newmessageteacher', urlencodedparser, async function (req, res) {
 	console.log(userNameTO);
 
 	if (userNameTO[0] === undefined) {
-		res.redirect('/newmessage?error=Den Benutzer gibt es nicht');
+		res.redirect('/newmessageteacher?error=Den Benutzer gibt es nicht');
 		return
 	}
 	if (req.body.message === undefined || req.body.message === '') {
-		res.redirect('/newmessage?error=Die Nachricht hat keinen Inhalt');
+		res.redirect('/newmessageteacher?error=Die Nachricht hat keinen Inhalt');
 		return;
 	}
 	const query = await connection.asyncquery('INSERT INTO messages (messageContent, messageTime, messageFromUserID, messageToUserID) VALUES (\'' + req.body.message + '\', now(), ' + user[0].userID + ', ' + userNameTO[0].userID + ')')
@@ -686,6 +715,22 @@ app.get('/messageread', async function(req, res) {
 		'SET messageRead = \'white\', messageButton=\'none\'\n' +
 		'WHERE messageID = ' + req.query.id);
 	res.redirect('/message');
+});
+
+app.get('/messagereadteacher', async function(req, res) {
+	if (!logined(req, res)) {
+		return
+	}
+	const user = await connection.asyncquery('SELECT * FROM theSchool.user WHERE userID = ' + loggedInUsers[req.cookies.sessionToken]);
+
+	const updateMessage = await connection.asyncquery('UPDATE messages \n' +
+		'SET messageRead = \'white\', messageButton=\'none\'\n' +
+		'WHERE messageID = ' + req.query.id);
+	res.redirect('/messageteacher');
+});
+
+app.get('*', function (req, res) {
+	res.render('errorpage.ejs', {error: 'Die von ihnen angeforderte Seite existiert nicht'})
 });
 
 app.listen(3000, function(){

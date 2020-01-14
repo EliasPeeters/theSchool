@@ -24,7 +24,7 @@
         <h3><%= item.userName%></h3>
         <p><%= item.messageContent%></p>
         <p style="color:lightgray"><%= item.messageTime%></p>
-        <div onmousedown="openPage('/messageread?id=<%=item.messageID%>')" class="readButton" style="display: <%=item.messageButton%>">Gelesen</div>
+        <div onmousedown="openPage('/messagereadteacher?id=<%=item.messageID%>')" class="readButton" style="display: <%=item.messageButton%>">Gelesen</div>
     </div>
     <% });%>
 

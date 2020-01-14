@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>Login</title>
+    <link type="text/css" rel="stylesheet" href="assets/login.css">
+    <link type="text/css" rel="stylesheet" href="assets/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<script>
+    function openPage(url) {
+        window.location.href = url;
+    }
+</script>
+
+<div id="loginbox">
+    <img src="assets/ohglogo.svg">
+    <h2>Fehler</h2>
+    <p><%= error%></p>
+    <div id="loginbutton" onmousedown="openPage('/profil')">Zum Profil</div>
+</div>
+</body>
+</html>
