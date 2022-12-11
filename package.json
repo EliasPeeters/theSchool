@@ -9,7 +9,7 @@
     "cookie-parser": "^1.4.4",
     "cryptr": "^4.0.2",
     "ejs": "^2.7.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mobile-detect": "^1.4.4",
     "mysql": "^2.17.1",
     "request": "^2.88.0",
